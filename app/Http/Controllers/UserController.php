@@ -246,13 +246,13 @@ class UserController extends Controller
 
                 return Redirect::back()->withErrors($validator)->withInput(Input::all());
             }
-            $data['givenname'] = Input::get('givenname');
-            $data['lastname'] = Input::get('lastname');
-            $data['name'] = Input::get('name');
-            $data['email'] = Input::get('email');
-            $data['section_id'] = Input::get('section');
-            $data['status'] = Input::get('status');
-            $data['on_leave'] = Input::get('on_leave');
+            $data['givenname'] = $request->input('givenname');
+            $data['lastname'] = $request->input('lastname');
+            $data['name'] = $request->input('name');
+            $data['email'] = $request->input('email');
+            $data['section_id'] = $request->input('section');
+            $data['status'] = $request->input('status');
+            $data['on_leave'] = $request->input('on_leave');
             $data['on_leave'] = $data['on_leave'] == '' ? null : $data['on_leave']; // prevent showing the date 30.11.-0001
 
         }
@@ -266,10 +266,10 @@ class UserController extends Controller
         $assignedRoleIds = [];
         $unassignedRoleIds = [];
         foreach ($sectionIds as $sectionId) {
-            $lAssignedRoleIds = explode(',', \Input::get('role-assigned-section-'.$sectionId));
+            $lAssignedRoleIds = explode(',', $request->input('role-assigned-section-'.$sectionId));
             $assignedRoleIds = array_merge($lAssignedRoleIds, $assignedRoleIds);
 
-            $lUnassignedRoleIds = explode(',', \Input::get('role-unassigned-section-'.$sectionId));
+            $lUnassignedRoleIds = explode(',', $request->input('role-unassigned-section-'.$sectionId));
             $unassignedRoleIds = array_merge($lUnassignedRoleIds, $unassignedRoleIds);
         }
 

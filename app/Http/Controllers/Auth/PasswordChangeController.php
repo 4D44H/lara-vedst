@@ -28,7 +28,7 @@ class PasswordChangeController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput();
         }
-        $oldPassword = Input::get('old-password');
+        $oldPassword = $request->input('old-password');
 
         $user = Auth::user();
 
@@ -39,7 +39,7 @@ class PasswordChangeController extends Controller
             return Redirect::back();
         }
 
-        $newPassword = Input::get('password');
+        $newPassword = $request->input('password');
         $user->password = bcrypt($newPassword);
         $user->save();
 /*
@@ -69,7 +69,7 @@ class PasswordChangeController extends Controller
      */
     private function changePasswordInLDAP(User $user)
     {
-        $encoded_newPassword = '{md5}' . base64_encode(mhash(MHASH_MD5, Input::get('password')));
+        $encoded_newPassword = '{md5}' . base64_encode(mhash(MHASH_MD5, $request->input('password')));
         $ldapPlatform = new LdapPlatform();
         $ldapPlatform->entry_name = 'userpassword';
         $ldapPlatform->entry_value = $encoded_newPassword;

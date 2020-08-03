@@ -1,6 +1,6 @@
 @if( is_null($shift->getPerson) )
     <div class="btn-group col-10 col-md-10 hidden-print p-0">
-        {!! Form::text('club' . $shift->id, Input::old('club' . $shift->id),
+        {!! Form::text('club' . $shift->id, Request::input('club' . $shift->id),
                        array( 'placeholder'=>'-',
                        'id'=>'club' . $shift->id,
                        'class'=>'col-12 col-md-12',

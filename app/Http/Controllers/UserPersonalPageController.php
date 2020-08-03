@@ -43,8 +43,9 @@ class UserPersonalPageController extends Controller
 
     public function updatePerson()
     {
+        $request=request();
         $user = \Auth::user();
-        $isNamePrivate = Input::get("is_name_private") == 'null' ? null : Input::get("is_name_private") == 'true';
+        $isNamePrivate = $request->input("is_name_private") == 'null' ? null : $request->input("is_name_private") == 'true';
         $user->is_name_private = $isNamePrivate;
         $user->save();
         // Return to the the section management page
@@ -58,8 +59,9 @@ class UserPersonalPageController extends Controller
     {
         /** @var Google2FA $google2fa */
         $google2fa = app('pragmarx.google2fa');
-        $secret = Input::get("secret");
-        $currentCode = Input::get('currentCode');
+        $request=request();
+        $secret = $request->input("secret");
+        $currentCode = $request->input('currentCode');
         if (!$this->validateGoogle2fa($google2fa, $currentCode, $secret)) {
             return Redirect::back()->withInput(Input::all())->withErrors(['code'=>'invalid code']);
         }

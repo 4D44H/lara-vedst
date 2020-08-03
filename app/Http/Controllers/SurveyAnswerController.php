@@ -3,20 +3,17 @@
 namespace Lara\Http\Controllers;
 
 use Auth;
-use Illuminate\Http\Request;
 use Hash;
+use Illuminate\Http\Request;
+use Input;
 use Lara\Library\Revision;
 use Lara\QuestionType;
 use Lara\Status;
-use Session;
-use Redirect;
-use Input;
-
 use Lara\Survey;
 use Lara\SurveyAnswer;
 use Lara\SurveyAnswerCell;
-use Lara\Http\Requests;
-use Lara\Club;
+use Redirect;
+use Session;
 
 
 /**
@@ -52,21 +49,20 @@ class SurveyAnswerController extends Controller
 
         //check if survey needs a password and validate hashes
         if ($survey->password !== ''
-            && !Hash::check( $input->password, $survey->password ) ) {
+            && !Hash::check($input->password, $survey->password)) {
             Session::put('message', 'Fehler: das angegebene Passwort ist falsch, keine Änderungen wurden gespeichert. Bitte versuche es erneut oder frage ein anderes Mitglied oder CL.');
             Session::put('msgType', 'danger');
-            return Redirect::action('SurveyController@show', array('id' => $survey->id));
+            return Redirect::action('SurveyController@show', [$survey->id]);
         }
 
         $survey_answer = new SurveyAnswer();
-		$revision_answer = new Revision($survey_answer);
+        $revision_answer = new Revision($survey_answer);
         // prevent guestentries with ldapId
         // prevent entries with foreign usernames but valid ldap_id
         $user = Auth::user();
-        if($user && $user->name  === $input->name) {
+        if ($user && $user->name === $input->name) {
             $survey_answer->creator_id = $user->person->id;
-        }
-        else {
+        } else {
             $survey_answer->creator_id = null;
         }
 
@@ -78,12 +74,12 @@ class SurveyAnswerController extends Controller
 
         $questions = $survey->getQuestions;
 
-        foreach($questions as $key => $question) {
+        foreach ($questions as $key => $question) {
             $survey_answer_cell = new SurveyAnswerCell();
             $revision_cell = new Revision($survey_answer_cell);
             $survey_answer_cell->survey_question_id = $question->id;
             $survey_answer_cell->survey_answer_id = $survey_answer->id;
-            switch($question->field_type) {
+            switch ($question->field_type) {
                 case QuestionType::Text :
                     $survey_answer_cell->answer = $input->answers[$key];
                     break;
@@ -110,7 +106,7 @@ class SurveyAnswerController extends Controller
         Session::put('message', 'Erfolgreich abgestimmt!');
         Session::put('msgType', 'success');
 
-        return Redirect::action('SurveyController@show', array('id' => $survey->id));
+        return Redirect::action('SurveyController@show', [$survey->id]);
     }
 
     /**
@@ -119,8 +115,10 @@ class SurveyAnswerController extends Controller
      * @param Request $input
      * @return json
      */
-    public function update($surveyid, $answerid, Request $input)
+    public function update($surveyid, $answerid)
     {
+        /** @var Request $input */
+        $input = request();
         //validate session token
         if (Session::token() !== $input->get('_token')) {
             return response()->json('Fehler: die Session ist abgelaufen. Bitte aktualisiere die Seite und logge dich ggf. erneut ein.', 401);
@@ -130,7 +128,7 @@ class SurveyAnswerController extends Controller
 
         //check if survey needs a password and validate hashes
         if ($survey->password !== ''
-            && !Hash::check( $input->password, $survey->password ) ) {
+            && !Hash::check($input->password, $survey->password)) {
             return response()->json('Fehler: das eingegebene Passwort war leider falsch.', 401);
         }
 
@@ -152,17 +150,17 @@ class SurveyAnswerController extends Controller
         $questions = $survey->getQuestions;
         $answer_cells = $survey_answer->getAnswerCells;
 
-        foreach($questions as $key => $question) {
+        foreach ($questions as $key => $question) {
             $survey_answer_cell = SurveyAnswerCell::find($answer_cells->get($key)->id);
             $revision_cell = new Revision($survey_answer_cell);
             $survey_answer_cell->survey_question_id = $question->id;
             $survey_answer_cell->survey_answer_id = $survey_answer->id;
-            switch($question->field_type) {
+            switch ($question->field_type) {
                 case 1: //Freitext
                     $survey_answer_cell->answer = $input->answers[$key];
                     break;
                 case 2: //Checkbox (Ja/Nein)
-                    if($input->answers[$key] == -1) {
+                    if ($input->answers[$key] == -1) {
                         $survey_answer_cell->answer = "keine Angabe";
                     } elseif ($input->answers[$key] == 0) {
                         $survey_answer_cell->answer = "Nein";
@@ -171,7 +169,7 @@ class SurveyAnswerController extends Controller
                     }
                     break;
                 case 3: //Dropdown
-                    if($input->answers[$key] == -1) {
+                    if ($input->answers[$key] == -1) {
                         $survey_answer_cell->answer = "keine Angabe";
                     } else {
                         $survey_answer_cell->answer = $input->answers[$key];
@@ -202,10 +200,10 @@ class SurveyAnswerController extends Controller
 
         $survey = Survey::findOrFail($surveyid);
         if ($survey->password !== ''
-            && !Hash::check( $input->password, $survey->password ) ) {
+            && !Hash::check($input->password, $survey->password)) {
             Session::put('message', 'Fehler: das eingegebene Passwort war leider falsch.');
             Session::put('msgType', 'error');
-            return Redirect::action('SurveyController@show', array('id' => $surveyid));
+            return Redirect::action('SurveyController@show', [$surveyid]);
         }
         $answer = SurveyAnswer::findOrFail($id);
         $revision_answer = new Revision($answer);
@@ -221,10 +219,10 @@ class SurveyAnswerController extends Controller
         $answer->delete();
         $revision_answer->save($answer, "Antwort gelöscht");
 
-        Session::put('message', 'Erfolgreich gelöscht!' );
+        Session::put('message', 'Erfolgreich gelöscht!');
         Session::put('msgType', 'success');
 
-        return Redirect::action('SurveyController@show', array('id' => $surveyid));
+        return Redirect::action('SurveyController@show', [ $surveyid ]);
     }
 
     /*

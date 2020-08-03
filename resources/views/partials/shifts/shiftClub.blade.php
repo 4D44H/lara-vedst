@@ -4,7 +4,7 @@
 
 <div class="dropdown">
 @if( is_null($shift->getPerson) )
-        {!! Form::text('club' . $shift->id, Input::old('club' . $shift->id),
+        {!! Form::text('club' . $shift->id, Request::input('club' . $shift->id),
                        array( 'placeholder'=>'-',
                        'id'=>'club' . $shift->id,
                        'class'=>'hidden-print form-control form-control-sm',

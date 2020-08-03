@@ -67,7 +67,7 @@ class ShiftController extends Controller
     public function update(Request $request, $id)
     {
         // Check if it's our form (CSRF protection)
-        if ( Session::token() !== Input::get( '_token' ) ) {
+        if ( Session::token() !== $request->input( '_token' ) ) {
             return response()->json(["errorCode"  =>'sessionExpired'], 401);
         }
 

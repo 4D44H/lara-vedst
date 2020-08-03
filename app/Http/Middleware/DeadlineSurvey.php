@@ -32,7 +32,7 @@ class DeadlineSurvey
             return $this->surveyRequestNotPermitted($request, $survey);
         }
         /*
-        
+
         if(Carbon::now() < Carbon::parse($survey->deadline) && \Auth::check()
             && (\Auth::user()->isAn(RoleUtility::PRIVILEGE_ADMINISTRATOR)
             || \Auth::user()->hasPermissionsInSection($survey->section(),RoleUtility::PRIVILEGE_CL,RoleUtility::PRIVILEGE_MARKETING))) {
@@ -41,7 +41,7 @@ class DeadlineSurvey
             return $this->surveyRequestNotPermitted($request, $survey);
         } */
     }
-    
+
     /**
      * @param $request
      * @param $survey
@@ -52,7 +52,7 @@ class DeadlineSurvey
         $request->session()->put('message',
             'Die Deadline ist überschritten, jetzt können nurnoch Clubleitung/Marketing/Admin die Umfrage ausfüllen');
         $request->session()->put('msgType', 'danger');
-        
-        return Redirect::action('SurveyController@show', ['id' => $survey->id]);
+
+        return Redirect::action('SurveyController@show', [$survey->id]);
     }
 }

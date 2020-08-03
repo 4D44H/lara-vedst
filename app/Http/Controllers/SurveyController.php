@@ -96,7 +96,7 @@ class SurveyController extends Controller
             SurveyQuestion::make($survey, $order, $question, $type, $isRequired, $options);
         }
 
-        return Redirect::action('SurveyController@show', array('id' => $survey->id));
+        return Redirect::action('SurveyController@show', [$survey->id]);
     }
 
 
@@ -140,11 +140,11 @@ class SurveyController extends Controller
      */
     public function show($id)
     {
-        
-        
+
+
         //find survey
         $survey = Survey::findOrFail($id);
-    
+
         $user = Auth::user();
         if (!$user && $survey->is_private == 1)
         {
@@ -153,7 +153,7 @@ class SurveyController extends Controller
             return Redirect::action('MonthController@showMonth', array('year' => date('Y'),
                                                                        'month' => date('m')));
         }
-        
+
         //find questions
         $questions = $survey->questions;
         $questionCount = count($questions);
@@ -523,7 +523,7 @@ class SurveyController extends Controller
             $questionRevision->save($questionToModify);
         }
 
-        return Redirect::action('SurveyController@show', array('id' => $survey->id));
+        return Redirect::action('SurveyController@show', [ $survey->id ]);
     }
 
 

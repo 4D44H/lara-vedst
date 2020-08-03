@@ -83,6 +83,7 @@ class ScheduleController extends Controller
     public function update($scheduleId)
     {
         $schedule = new Schedule;
+        $request= request();
 
         if (!is_null($scheduleId))
         {
@@ -90,9 +91,9 @@ class ScheduleController extends Controller
         }
 
         // format: time; validate on filled value
-        if(!empty(Input::get('preparationTime')))
+        if(!empty($request->input('preparationTime')))
         {
-            $schedule->schdl_time_preparation_start = Input::get('preparationTime');
+            $schedule->schdl_time_preparation_start = $request->input('preparationTime');
         }
         else
         {
@@ -100,13 +101,13 @@ class ScheduleController extends Controller
         }
 
         // format: password; validate on filled value
-        if (Input::get('password') == "delete" && Input::get('passwordDouble') == "delete") {
+        if ($request->input('password') == "delete" && $request->input('passwordDouble') == "delete") {
             $schedule->schdl_password = '';
         }
-        elseif (!empty(Input::get('password'))
-            && !empty(Input::get('passwordDouble'))
-            && Input::get('password') == Input::get('passwordDouble')) {
-            $schedule->schdl_password = Hash::make(Input::get('password'));
+        elseif (!empty($request->input('password'))
+            && !empty($request->input('passwordDouble'))
+            && $request->input('password') == $request->input('passwordDouble')) {
+            $schedule->schdl_password = Hash::make($request->input('password'));
         }
 
         return $schedule;
@@ -145,7 +146,8 @@ class ScheduleController extends Controller
     */
     public static function makeShiftsFromRequest($schedule, $isNewEvent = true)
     {
-        $inputShifts = Input::get("shifts");
+        $request=request();
+        $inputShifts = $request->input("shifts");
         $amount = is_null($inputShifts) ? 0 : count($inputShifts["title"]);
         $currentShiftIds = $inputShifts["id"] ? $inputShifts["id"] : [];
         $schedule->shifts()

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Input;
 use Lara\Club;
+use Lara\Http\Requests\Request;
 use Lara\Person;
 use Lara\Section;
 use Lara\Status;
@@ -111,7 +112,7 @@ class LoginController extends Controller
             return redirect("/");
         }
 
-        $someLoginWorked = $this->attemtLoginViaDevelop() || $this->attemptLoginViaLDAP()
+        $someLoginWorked = $this->attemtLoginViaDevelop(request()) || $this->attemptLoginViaLDAP(request())
             || $this->attemtLoginWithClubNumber(request())
             || $this->attemptLoginWithCredentials(request(), 'name')
             || $this->attemptLoginWithCredentials(request(), 'email');
@@ -136,7 +137,7 @@ class LoginController extends Controller
         return $this->loginFailed();
     }
 
-    private function attemtLoginViaDevelop(){
+    private function attemtLoginViaDevelop(\Illuminate\Http\Request $request){
         if (!App::environment('development')) {
             return false;
         }
@@ -145,7 +146,7 @@ class LoginController extends Controller
         $clubIdsOfSections = Section::all()->map(function(Section $s) {
             return $s->club()->id;
         });
-        $username = Input::get("username");
+        $username = $request->input("username");
         if($username != null && $username != ""){
             $person = Person::query()->where('prsn_ldap_id','=',$username)->first();
         } else {
@@ -175,20 +176,20 @@ class LoginController extends Controller
         return true;
     }
 
-    protected function attemptLoginViaLDAP()
+    protected function attemptLoginViaLDAP(Request $request)
     {
         try {
-            return $this->attemptLoginViaLDAPInternal();
+            return $this->attemptLoginViaLDAPInternal($request);
         } catch (\Exception $e) {
-            Log::error(Input::get("username") . " tried to login via LDAP, but LDAP is not available.");
+            Log::error($request->input("username") . " tried to login via LDAP, but LDAP is not available.");
             Utilities::error(trans("auth.ldap_down"));
             return false;
         }
     }
 
-    protected function attemptLoginViaLDAPInternal()
+    protected function attemptLoginViaLDAPInternal(Request $request)
     {
-            if (Input::get('username') === "1708") {
+            if ($request->input('username') === "1708") {
                 Session::put('message', 'Ne ne ne, nicht mit dieser Clubnummer, sie ist ja nur fur bc-Wiki zu benutzen ;)');
                 Session::put('msgType', 'danger');
 
@@ -216,7 +217,7 @@ class LoginController extends Controller
 
 
             // Request UID if none entered
-            if (Input::get('username') === '') {
+            if ($request->input('username') === '') {
                 ldap_unbind($ldapConn);
 
                 Log::info('Auth fail: empty userID given.');
@@ -225,10 +226,10 @@ class LoginController extends Controller
             }
 
             // Request numeric UID if something else is entered
-            if (!is_numeric(Input::get('username'))) {
+            if (!is_numeric($request->input('username'))) {
                 ldap_unbind($ldapConn);
 
-                Log::info('Auth fail: not a number given as userID (username: ' . Input::get('username') . ').');
+                Log::info('Auth fail: not a number given as userID (username: ' . $request->input('username') . ').');
 
                 return false;
             }
@@ -238,7 +239,7 @@ class LoginController extends Controller
             $search = ldap_search($ldapConn,
                 Config::get('bcLDAP.bc-club-ou') .
                 Config::get('bcLDAP.base-dn'),
-                '(uid=' . Input::get('username') . ')');
+                '(uid=' . $request->input('username') . ')');
 
             $info = ldap_get_entries($ldapConn, $search);
 
@@ -258,7 +259,7 @@ class LoginController extends Controller
                 $search = ldap_search($ldapConn,
                     Config::get('bcLDAP.bc-cafe-ou') .
                     Config::get('bcLDAP.base-dn'),
-                    '(uid=' . Input::get('username') . ')');
+                    '(uid=' . $request->input('username') . ')');
 
                 $info = ldap_get_entries($ldapConn, $search);
 
@@ -279,7 +280,7 @@ class LoginController extends Controller
                 Session::put('message', Config::get('messages_de.uid-not-found'));
                 Session::put('msgType', 'danger');
 
-                Log::info('Auth fail: wrong userID given (username: ' . Input::get('username') . ').');
+                Log::info('Auth fail: wrong userID given (username: ' . $request->input('username') . ').');
 
                 return false;
             }
@@ -384,7 +385,7 @@ class LoginController extends Controller
 
 
             // Hashing password input
-            $password = '{md5}' . base64_encode(mhash(MHASH_MD5, Input::get('password')));
+            $password = '{md5}' . base64_encode(mhash(MHASH_MD5, $request->input('password')));
 
             // end ldapConnection
             ldap_unbind($ldapConn);
@@ -424,7 +425,7 @@ class LoginController extends Controller
                 }
 
                 // this is the internally used hashing
-                $user->password = bcrypt(Input::get('password'));
+                $user->password = bcrypt($request->input('password'));
 
                 $user->status = $userStatus;
                 $user->save();
@@ -484,8 +485,7 @@ class LoginController extends Controller
     {
         Utilities::error(Config::get('messages_de.login-fail'));
         $this->incrementLoginAttempts(request());
-
-        return redirect()->back();
+        return redirect()->back()->withInput(Request::all());
     }
 
     /**

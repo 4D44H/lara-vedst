@@ -43,7 +43,7 @@ class ShiftTypeController extends Controller
     }
 
     public function search(Request $request) {
-        $filter = Input::get('filter');
+        $filter = $request->input('filter');
         return redirect(route('shiftTypeSearch', ['filter'=>$filter]));
     }
 
@@ -181,8 +181,8 @@ class ShiftTypeController extends Controller
     public function overrideShiftType(Request $request)
     {
 
-        $shiftId = Input::get('shift');
-        $shiftTypeNewId = Input::get('shiftType');
+        $shiftId = $request->input('shift');
+        $shiftTypeNewId = $request->input('shiftType');
 
         $this->replaceShiftType($shiftId, $shiftTypeNewId);
         return Redirect::back();
@@ -191,8 +191,8 @@ class ShiftTypeController extends Controller
 
     public function completeOverrideShiftType(Request $request)
     {
-        $shiftTypeId = Input::get('shift');
-        $shiftTypeNewId = Input::get('shiftType');
+        $shiftTypeId = $request->input('shift');
+        $shiftTypeNewId = $request->input('shiftType');
 
         /** @var ShiftType $shiftType */
         $shiftType = ShiftType::findOrFail($shiftTypeId);
@@ -267,7 +267,7 @@ class ShiftTypeController extends Controller
             // Inform the user about the redirect and go to detailed info about the job type selected
             Session::put('message', trans('mainLang.deleteFailedShiftTypeInUse'));
             Session::put('msgType', 'danger');
-            return Redirect::action( 'ShiftTypeController@show', ['id' => $shiftType->id] );
+            return Redirect::action( 'ShiftTypeController@show', [ $shiftType->id] );
         }
         else
         {

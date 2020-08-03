@@ -4,7 +4,7 @@
 
 @if( is_null($shift->getPerson) )
     {!! Form::text('userName' . $shift->id,
-                 Input::old('userName' . $shift->id),
+                 Request::input('userName' . $shift->id),
                  array('placeholder'=>'=FREI=',
                        'id'=>'userName' . $shift->id,
                        'class'=>'col-8 col-md-8 ',

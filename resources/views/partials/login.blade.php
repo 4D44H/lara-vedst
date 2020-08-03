@@ -3,7 +3,7 @@
 
 <div class="navbar-form form-inline login-forms">
     {!! Form::text( 'username',
-                    Input::old( 'username' ),
+                    Request::input( 'username' ),
                     ['placeholder'  => Lang::get('mainLang.clubNumber') . " / " . trans('auth.email'),
                           'class'        => 'form-control form-control-sm',
                           'autocomplete' => 'on',

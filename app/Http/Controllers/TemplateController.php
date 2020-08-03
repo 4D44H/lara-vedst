@@ -68,25 +68,25 @@ class TemplateController extends Controller
      */
     public function store(Request $request, $templateId)
     {
-        $title = Input::get('title');
-        $subtitle = Input::get('subtitle');
-        $type = Input::get('type');
-        $isPrivate = (Input::get('isPrivate') == '1') ? 0 : 1;
-        $section = Input::get('section');
-        $filter = collect(Input::get("filter"))->values()->toArray();
-        $priceTicketsNormal = Input::get('priceTicketsNormal');
-        $priceTicketsExternal = Input::get('priceTicketsExternal');
-        $priceNormal = Input::get('priceNormal');
-        $priceExternal = Input::get('priceExternal');
-        $preparationTime = Input::get('preparationTime');
-        $publicInfo = Input::get('publicInfo');
-        $privateDetails = Input::get('privateDetails');
-        $facebookNeeded = Input::get('facebookNeeded');
-        $timeStart = Input::get('beginTime');
-        $timeEnd = Input::get('endTime');
+        $title = $request->input('title');
+        $subtitle = $request->input('subtitle');
+        $type = $request->input('type');
+        $isPrivate = ($request->input('isPrivate') == '1') ? 0 : 1;
+        $section = $request->input('section');
+        $filter = collect($request->input("filter"))->values()->toArray();
+        $priceTicketsNormal = $request->input('priceTicketsNormal');
+        $priceTicketsExternal = $request->input('priceTicketsExternal');
+        $priceNormal = $request->input('priceNormal');
+        $priceExternal = $request->input('priceExternal');
+        $preparationTime = $request->input('preparationTime');
+        $publicInfo = $request->input('publicInfo');
+        $privateDetails = $request->input('privateDetails');
+        $facebookNeeded = $request->input('facebookNeeded');
+        $timeStart = $request->input('beginTime');
+        $timeEnd = $request->input('endTime');
         /** @var $template Template */
         $template = Template::firstOrNew(["id" => $templateId]);
-        $inputShifts = Input::get("shifts");
+        $inputShifts = $request->input("shifts");
         $amount = count($inputShifts["title"]);
 
         $currentShiftIds = $inputShifts["id"] ? $inputShifts["id"] : [];

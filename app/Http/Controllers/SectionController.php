@@ -77,14 +77,14 @@ class SectionController extends Controller
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        $title =            Input::get("title");
-        $id =               Input::get("id");
-        $color =            Input::get("color");
-        $preparationTime =  Input::get("preparationTime");
-        $startTime =        Input::get("startTime");
-        $endTime =          Input::get("endTime");
+        $title =            $request->input("title");
+        $id =               $request->input("id");
+        $color =            $request->input("color");
+        $preparationTime =  $request->input("preparationTime");
+        $startTime =        $request->input("startTime");
+        $endTime =          $request->input("endTime");
         $isNew =            strlen($id) == 0;
-        $isNamePrivate =    Input::get("is_name_private") == 'true';
+        $isNamePrivate =    $request->input("is_name_private") == 'true';
 
 
         if ($validator->fails()) {

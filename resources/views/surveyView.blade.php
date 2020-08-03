@@ -225,7 +225,7 @@ $ldapid
                                 {!! Form::close() !!}
                             </td>
                         </tr>
-                        {!! Form::open(['action' => ['SurveyAnswerController@update', $survey->id,  'id' => '' ], 'class' => 'update']) !!}
+                        {!! Form::open(['action' => ['SurveyAnswerController@update', $survey->id, '' ], 'class' => 'update']) !!}
                         @if(!$survey->is_anonymous || $userId == $survey->creator_id)
                             @if(!$survey->show_results_after_voting || $userParticipatedAlready)
                                 @foreach($answers as $key => $answer)

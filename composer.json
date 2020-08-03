@@ -38,6 +38,7 @@
         "bacon/bacon-qr-code": "^2.0",
         "barryvdh/laravel-ide-helper": "^2.6",
         "eluceo/ical": "^0.11.6",
+        "erusev/parsedown": "^1.7",
         "johngrogg/ics-parser": "^2",
         "laravel/framework": "^6",
         "laravel/tinker": "^v2",
