@@ -118,7 +118,7 @@ class ShiftTypeController extends Controller
         // Check credentials: you can only edit, if you have rights for marketing, section management or admin
         $user = Auth::user();
 
-        if(!$user || !$user->is(['marketing', 'clubleitung', 'admin']))
+        if(!$user || !$user->isAn(['marketing', 'clubleitung', 'admin']))
         {
             Session::put('message', trans('mainLang.cantTouchThis'));
             Session::put('msgType', 'danger');
