@@ -240,7 +240,7 @@ class UserController extends Controller
         $data = [];
         if (Auth::user()->isAn(RoleUtility::PRIVILEGE_ADMINISTRATOR) || Auth::user()->hasPermissionsInSection($user->section,
                 RoleUtility::PRIVILEGE_CL)) {
-            $validator = $this->validator($user, Input::all());
+            $validator = $this->validator($user, $request->all());
             if ($validator->fails()) {
                 Utilities::error(trans('mainLang.changesWereReset'));
 
