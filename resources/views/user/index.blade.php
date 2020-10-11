@@ -97,7 +97,7 @@
                                         {{ $user->section->title }}
                                     </td>
                                     <td>
-                                        <a href="{{route("user.edit",["id"=>$user->id])}}">
+                                        <a href="{{route("user.edit",["user"=>$user->id])}}">
                                             {{ $user->name }}
                                         </a>
                                     </td>
