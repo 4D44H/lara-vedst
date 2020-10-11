@@ -1,4 +1,4 @@
-import * as Sortable from "../../../node_modules/sortablejs/Sortable.js"
+import * as Sortable from "sortablejs"
 
 let shiftContainer = document.getElementById("shiftContainer");
 if (shiftContainer) {
