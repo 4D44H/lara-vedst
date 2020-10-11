@@ -75,7 +75,7 @@ class SectionController extends Controller
             'title' => 'required',
             'color' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         $title =            $request->input("title");
         $id =               $request->input("id");
@@ -88,7 +88,7 @@ class SectionController extends Controller
 
 
         if ($validator->fails()) {
-           return Redirect::back()->withErrors($validator)->withInput(Input::all());
+           return Redirect::back()->withErrors($validator)->withInput($request->all());
         }
 
         if ($isNew) {

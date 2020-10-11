@@ -11,6 +11,7 @@ use Lara\User;
 use Lara\Utilities;
 use Lara\utilities\LdapUtility;
 use Redirect;
+use Request;
 use Validator;
 use View;
 
@@ -23,8 +24,10 @@ class PasswordChangeController extends Controller
 
     public function changePassword()
     {
+        /** @var Request $request */
+        $request=request();
         // Get old password and check that it matches the one stored in the DB
-        $validator = $this->validator(Input::all());
+        $validator = $this->validator($request->all());
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator)->withInput();
         }

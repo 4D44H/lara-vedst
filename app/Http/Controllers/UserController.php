@@ -244,7 +244,7 @@ class UserController extends Controller
             if ($validator->fails()) {
                 Utilities::error(trans('mainLang.changesWereReset'));
 
-                return Redirect::back()->withErrors($validator)->withInput(Input::all());
+                return Redirect::back()->withErrors($validator)->withInput($request->all());
             }
             $data['givenname'] = $request->input('givenname');
             $data['lastname'] = $request->input('lastname');

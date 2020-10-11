@@ -28,7 +28,7 @@ class SecondFactorController extends Controller
     public function verify()
     {
         $request=request();
-        $validator = \Validator::make(\Input::all(), [
+        $validator = \Validator::make($request->all(), [
             'code' => 'required|digits:6'
         ]);
         if ($validator->fails()) {

@@ -63,7 +63,7 @@ class UserPersonalPageController extends Controller
         $secret = $request->input("secret");
         $currentCode = $request->input('currentCode');
         if (!$this->validateGoogle2fa($google2fa, $currentCode, $secret)) {
-            return Redirect::back()->withInput(Input::all())->withErrors(['code'=>'invalid code']);
+            return Redirect::back()->withInput($request->all())->withErrors(['code'=>'invalid code']);
         }
         /** @var User $user */
         $user = \Auth::user();
