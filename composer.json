@@ -40,8 +40,10 @@
         "eluceo/ical": "^0.11.6",
         "erusev/parsedown": "^1.7",
         "johngrogg/ics-parser": "^2",
-        "laravel/framework": "^6",
-        "laravel/tinker": "^v2",
+        "laravel/framework": "^7",
+        "facade/ignition":"^2.0",
+        "nunomaduro/collision": "^4.1",
+        "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6",
         "pragmarx/google2fa-laravel": "^1.3",
         "rap2hpoutre/laravel-log-viewer": "^1.6"
@@ -51,7 +53,7 @@
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~0.9.11",
         "orangehill/iseed": "dev-master",
-        "phpunit/phpunit": "~9.2.6",
+        "phpunit/phpunit": "^8.5",
         "filp/whoops": "~2.7.3"
     },
     "scripts": {
