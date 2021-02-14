@@ -24,7 +24,7 @@
         "sort-packages": true,
         "optimize-autoloader": true
     },
-    "description": "A calender with personnel scheduling for club management, built on top of Laravel 5.",
+    "description": "A calender with personnel scheduling for club management, built on top of Laravel 7.",
     "keywords": [
         "calendar",
         "scheduling",
@@ -55,7 +55,7 @@
         "mockery/mockery": "~0.9.11",
         "orangehill/iseed": "dev-master",
         "phpunit/phpunit": "^8.5",
-        "filp/whoops": "~2.7.3"
+        "filp/whoops": "^2.7.3"
     },
     "scripts": {
         "post-create-project-cmd": [
